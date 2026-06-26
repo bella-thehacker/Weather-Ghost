@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 100% 98%;
+    --foreground: 30 8% 11%;
+    --card: 30 100% 98%;
+    --card-foreground: 30 8% 11%;
+    --popover: 30 100% 98%;
+    --popover-foreground: 30 8% 11%;
+    --primary: 336 43% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 197 19% 36%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 30 20% 93%;
+    --muted-foreground: 15 7% 33%;
+    --accent: 30 20% 93%;
+    --accent-foreground: 30 8% 11%;
+    --destructive: 0 72% 41%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 340 14% 80%;
+    --input: 340 14% 80%;
+    --ring: 336 43% 42%;
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-surface text-on-surface font-fredoka;
+    background-image: radial-gradient(#d8c0c7 1px, transparent 1px);
+    background-size: 20px 20px;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='8' fill='white' stroke='%23993e68' stroke-width='2'/%3E%3C/svg%3E"), auto;
+  }
+
+  * {
+    @apply border-outline-variant;
+  }
+
+  ::selection {
+    background-color: #ff92bf;
+    color: #7a264f;
+  }
+}
+
+@layer components {
+  .ghost-window {
+    @apply border-2 border-outline-variant shadow-ghost bg-surface;
+    border-radius: 1rem;
+  }
+
+  .window-titlebar {
+    @apply border-b-2 border-outline-variant bg-surface-container;
+  }
+
+  .pixel-border-dashed {
+    @apply border-2 border-dashed border-outline-variant;
+  }
+
+  .pixel-btn {
+    @apply relative transition-all duration-150 active:translate-y-0.5 active:shadow-ghost-pressed;
+    box-shadow: 4px 4px 0px 0px rgba(93, 87, 84, 0.1);
+  }
+
+  .pixel-btn:hover {
+    box-shadow: 6px 6px 0px 0px rgba(93, 87, 84, 0.15);
+    transform: scale(1.02);
+  }
+
+  .pixel-btn:active {
+    box-shadow: 0px 0px 0px 0px rgba(93, 87, 84, 0);
+    transform: translateY(2px) scale(0.98);
+  }
+
+  .notebook-bg {
+    background-color: #fff8f4;
+    background-image: linear-gradient(90deg, transparent 79px, #ffd9e5 79px, #ffd9e5 81px, transparent 81px),
+                      linear-gradient(#eee7e3 0.1em, transparent 0.1em);
+    background-size: 100% 1.5em;
+  }
+
+  .sticker-slot {
+    background-image: radial-gradient(#d8c0c7 1px, transparent 1px);
+    background-size: 8px 8px;
+  }
+
+  .speech-bubble {
+    position: relative;
+    background: #ffffff;
+    border: 2px solid #867278;
+    border-radius: 1rem;
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #867278 transparent transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f3ede9;
+    border-radius: 99px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #ff92bf;
+    border: 2px solid #f3ede9;
+    border-radius: 99px;
+  }
+}
+
+@layer utilities {
+  .font-display-lg {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 48px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .font-headline-lg {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  .font-headline-md {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 24px;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  .font-headline-sm {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  .font-body-lg {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .font-body-md {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .font-label-lg {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .font-label-sm {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+}
