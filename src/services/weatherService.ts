@@ -498,8 +498,8 @@ export async function fetchForecast(city: string): Promise<ForecastDay[]> {
 
 function getMockWeather(city: string): WeatherData {
   return {
-    city: city || 'London',
-    country: 'United Kingdom',
+    city: city || 'Nairobi',
+    country: 'Kenya',
     temperature: 18,
     feelsLike: 16,
     humidity: 65,

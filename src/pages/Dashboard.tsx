@@ -12,12 +12,12 @@ import {
   MapPin,
   TrendingUp,
 } from 'lucide-react';
-import GhostWindow from '@/components/GhostWindow';
-import WeatherStatCard from '@/components/WeatherStatCard';
-import WeatherChip from '@/components/WeatherChip';
-import { useAppStore } from '@/store/useAppStore';
-import { fetchCurrentWeather, getGhostMood } from '@/services/weatherService';
-import type { WeatherData, GhostMood } from '@/types';
+import GhostWindow from '../components/GhostWindow';
+import WeatherStatCard from '../components/WeatherStatCard';
+import WeatherChip from '../components/WeatherChip';
+import { useAppStore } from '../store/useAppStore';
+import { fetchCurrentWeather, getGhostMood } from '../services/weatherService';
+import type { WeatherData, GhostMood } from '../types';
 
 export default function Dashboard() {
   const { currentCity } = useAppStore();
