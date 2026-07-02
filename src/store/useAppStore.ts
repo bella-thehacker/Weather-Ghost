@@ -10,6 +10,7 @@ interface AppState {
   activeTab: string;
   sidebarOpen: boolean;
   isLoading: boolean;
+  dismissedEntries: string[]; // Track which almanac cards are closed
 
   setSettings: (settings: Partial<AppSettings>) => void;
   setCurrentCity: (city: string) => void;
@@ -22,6 +23,7 @@ interface AppState {
   setActiveTab: (tab: string) => void;
   setSidebarOpen: (open: boolean) => void;
   setIsLoading: (loading: boolean) => void;
+  dismissEntry: (id: string) => void; // Action to hide a card
 }
 
 const defaultSettings: AppSettings = {
@@ -145,10 +147,10 @@ const initialGhosts: Ghost[] = [
 ];
 
 const initialPinnedCities: PinnedCity[] = [
-  { id: '1', name: 'Paris', country: 'France', lat: 48.8566, lon: 2.3522 },
-  { id: '2', name: 'Seoul', country: 'South Korea', lat: 37.5665, lon: 126.978 },
-  { id: '3', name: 'Reykjavik', country: 'Iceland', lat: 64.1466, lon: -21.9426 },
-  { id: '4', name: 'Cape Town', country: 'South Africa', lat: -33.9249, lon: 18.4241 },
+  { id: '1', name: 'Kiambu', country: 'Kenya', lat: -1.1714, lon: 36.8356 },
+  { id: '2', name: 'Nairobi', country: 'Kenya', lat: -1.2921, lon: 36.8219 },
+  { id: '3', name: 'Karen', country: 'Kenya', lat: -1.3200, lon: 36.7000 },
+  { id: '4', name: 'Kikuyu', country: 'Kenya', lat: -1.2543, lon: 36.6605 },
 ];
 
 const initialNotifications: Notification[] = [
@@ -180,13 +182,14 @@ const initialNotifications: Notification[] = [
 
 export const useAppStore = create<AppState>((set) => ({
   settings: defaultSettings,
-  currentCity: 'London',
+  currentCity: 'Nairobi',
   pinnedCities: initialPinnedCities,
   notifications: initialNotifications,
   ghosts: initialGhosts,
   activeTab: 'dashboard',
   sidebarOpen: true,
   isLoading: false,
+  dismissedEntries: [],
 
   setSettings: (newSettings) =>
     set((state) => ({ settings: { ...state.settings, ...newSettings } })),
@@ -213,4 +216,6 @@ export const useAppStore = create<AppState>((set) => ({
   setActiveTab: (tab) => set({ activeTab: tab }),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   setIsLoading: (loading) => set({ isLoading: loading }),
+  dismissEntry: (id) =>
+    set((state) => ({ dismissedEntries: [...state.dismissedEntries, id] })),
 }));

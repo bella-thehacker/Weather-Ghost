@@ -16,7 +16,7 @@ import GhostWindow from '../components/GhostWindow';
 import WeatherStatCard from '../components/WeatherStatCard';
 import WeatherChip from '../components/WeatherChip';
 import { useAppStore } from '../store/useAppStore';
-import { fetchCurrentWeather, getGhostMood } from '../services/weatherService';
+import { fetchCurrentWeather, getGhostMood, getWeatherIconAsset } from '../services/weatherService';
 import type { WeatherData, GhostMood } from '../types';
 
 export default function Dashboard() {
@@ -73,7 +73,7 @@ export default function Dashboard() {
       <GhostWindow title={`${weather.city}_Weather.exe`} titleBarColor="pink">
         <div className="p-md lg:p-lg">
           <div className="flex flex-col lg:flex-row gap-lg items-start">
-            {/* Left: Main Weather */}
+            {/* Left Column: Main Weather Readouts */}
             <div className="flex-1">
               <div className="flex items-center gap-sm mb-2">
                 <MapPin className="w-4 h-4 text-primary" />
@@ -94,7 +94,7 @@ export default function Dashboard() {
                 </span>
               </motion.h2>
 
-              {/* Ghost Quote */}
+              {/* Character Text Box Quote Bubble */}
               <motion.div
                 className="pixel-border-dashed p-md rounded-lg bg-surface-container-low max-w-lg mb-md"
                 initial={{ opacity: 0, y: 10 }}
@@ -106,7 +106,7 @@ export default function Dashboard() {
                 </p>
               </motion.div>
 
-              {/* Mood & Sadness */}
+              {/* Status Chips */}
               <div className="flex flex-wrap gap-sm items-center">
                 <WeatherChip label={`Mood: ${ghostMood.mood}`} color="pink" />
                 <WeatherChip
@@ -117,24 +117,25 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Right: Weather Icon & Ghost */}
+            {/* Right Column: Dynamic Weather Icon Grid Canvas Display */}
             <motion.div
-              className="flex flex-col items-center gap-sm"
+              className="flex flex-col items-center gap-sm self-center lg:self-start lg:mr-md"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
             >
               <div className="relative">
+                {/* Dynamically loads live matching weather sprites! */}
                 <img
-                  src="/icons/cloud.png"
+                  src={getWeatherIconAsset(weather.condition)}
                   alt={weather.condition}
-                  className="w-32 h-32 object-contain"
+                  className="w-32 h-32 object-contain select-none"
                   style={{ imageRendering: 'pixelated' }}
                 />
                 <motion.img
                   src="/ghosts/Normal-ghost.png"
                   alt="Ghost"
-                  className="w-16 h-16 absolute -bottom-2 -right-2"
+                  className="w-16 h-16 absolute -bottom-2 -right-2 select-none"
                   style={{ imageRendering: 'pixelated' }}
                   animate={{ y: [0, -5, 0] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -143,7 +144,7 @@ export default function Dashboard() {
             </motion.div>
           </div>
 
-          {/* Sky Sadness Meter */}
+          {/* Sky Sadness Atmospheric Meter */}
           <div className="mt-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="font-nunito text-label-sm text-on-surface-variant">
@@ -177,7 +178,7 @@ export default function Dashboard() {
         </div>
       </GhostWindow>
 
-      {/* Stat Cards Grid */}
+      {/* Grid of Weather Detail Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
         <WeatherStatCard
           label="Temperature"
@@ -247,7 +248,7 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Sunrise/Sunset */}
+      {/* Sunrise and Sunset Windows */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
         <GhostWindow title="sunrise.exe" icon={<Sun className="w-4 h-4 text-yellow-500" />}>
           <div className="p-md flex items-center justify-between">
@@ -255,16 +256,8 @@ export default function Dashboard() {
               <p className="font-nunito text-label-sm text-on-surface-variant">Sunrise</p>
               <p className="font-pixel text-headline-lg text-yellow-600">{weather.sunrise}</p>
             </div>
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity }}
-            >
-              <img
-                src="/icons/sun.png"
-                alt="Sun"
-                className="w-16 h-16"
-                style={{ imageRendering: 'pixelated' }}
-              />
+            <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 4, repeat: Infinity }}>
+              <img src="/icons/sun.png" alt="Sun" className="w-16 h-16" style={{ imageRendering: 'pixelated' }} />
             </motion.div>
           </div>
         </GhostWindow>
@@ -275,16 +268,8 @@ export default function Dashboard() {
               <p className="font-nunito text-label-sm text-on-surface-variant">Sunset</p>
               <p className="font-pixel text-headline-lg text-purple-600">{weather.sunset}</p>
             </div>
-            <motion.div
-              animate={{ y: [0, -3, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              <img
-                src="/icons/moon.png"
-                alt="Moon"
-                className="w-16 h-16"
-                style={{ imageRendering: 'pixelated' }}
-              />
+            <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 3, repeat: Infinity }}>
+              <img src="/icons/moon.png" alt="Moon" className="w-16 h-16" style={{ imageRendering: 'pixelated' }} />
             </motion.div>
           </div>
         </GhostWindow>

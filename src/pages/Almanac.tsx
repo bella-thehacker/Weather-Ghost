@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Star, Pin, X, MapPin, Cloud, Heart } from 'lucide-react';
 import GhostWindow from '../components/GhostWindow';
 import WeatherChip from '../components/WeatherChip';
@@ -78,7 +78,9 @@ const mockEntries = [
 ];
 
 export default function Almanac() {
-  const { pinnedCities } = useAppStore();
+  const { pinnedCities, dismissedEntries, dismissEntry } = useAppStore();
+
+  const visibleEntries = mockEntries.filter((entry) => !dismissedEntries.includes(entry.id));
 
   return (
     <div className="space-y-lg">
@@ -103,97 +105,101 @@ export default function Almanac() {
         </div>
       </GhostWindow>
 
-      {/* Entries Grid */}
+      {/* Entries Grid Canvas layout with close handles */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-lg">
-        {mockEntries.map((entry, index) => (
-          <motion.div
-            key={entry.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <GhostWindow
-              title={entry.date}
-              titleBarColor={entry.isPinned ? 'pink' : 'gray'}
-              onClose={() => {}}
+        <AnimatePresence>
+          {visibleEntries.map((entry, index) => (
+            <motion.div
+              key={entry.id}
+              layout
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 35, delay: index * 0.05 }}
             >
-              <div className="p-md">
-                {/* Header */}
-                <div className="flex items-start gap-md mb-md">
-                  <motion.img
-                    src={entry.ghostImage}
-                    alt=""
-                    className="w-16 h-16 object-contain flex-shrink-0"
-                    style={{ imageRendering: 'pixelated' }}
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                  />
-                  <div>
-                    <h3 className="font-pixel text-headline-md text-secondary">{entry.title}</h3>
-                    <div className="flex items-center gap-1 mt-1">
-                      <MapPin className="w-3 h-3 text-on-surface-variant" />
-                      <span className="font-nunito text-label-sm text-on-surface-variant">
-                        {entry.city}, {entry.country}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Cloud className="w-3 h-3 text-on-surface-variant" />
-                      <span className="font-nunito text-label-sm text-on-surface-variant">
-                        {entry.weather}, {entry.temperature}°C
-                      </span>
+              <GhostWindow
+                title={entry.date}
+                titleBarColor={entry.isPinned ? 'pink' : 'gray'}
+                onClose={() => dismissEntry(entry.id)}
+              >
+                <div className="p-md">
+                  {/* Header */}
+                  <div className="flex items-start gap-md mb-md">
+                    <motion.img
+                      src={entry.ghostImage}
+                      alt=""
+                      className="w-16 h-16 object-contain flex-shrink-0 select-none"
+                      style={{ imageRendering: 'pixelated' }}
+                      animate={{ y: [0, -4, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                    <div>
+                      <h3 className="font-pixel text-headline-md text-secondary">{entry.title}</h3>
+                      <div className="flex items-center gap-1 mt-1">
+                        <MapPin className="w-3 h-3 text-on-surface-variant" />
+                        <span className="font-nunito text-label-sm text-on-surface-variant">
+                          {entry.city}, {entry.country}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 mt-1">
+                        <Cloud className="w-3 h-3 text-on-surface-variant" />
+                        <span className="font-nunito text-label-sm text-on-surface-variant">
+                          {entry.weather}, {entry.temperature}°C
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Story */}
-                <div className="pixel-border-dashed p-md rounded-lg bg-surface mb-md">
-                  <p className="font-fredoka text-body-md text-on-surface italic leading-relaxed">
-                    "{entry.story}"
-                  </p>
-                </div>
+                  {/* Story */}
+                  <div className="pixel-border-dashed p-md rounded-lg bg-surface mb-md">
+                    <p className="font-fredoka text-body-md text-on-surface italic leading-relaxed">
+                      "{entry.story}"
+                    </p>
+                  </div>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-xs">
-                  {entry.moodTags.map((tag) => (
-                    <WeatherChip
-                      key={tag}
-                      label={tag}
-                      color={
-                        tag.includes('Hot') || tag.includes('UV')
-                          ? 'orange'
-                          : tag.includes('Cold') || tag.includes('Blizzard')
-                          ? 'cyan'
-                          : tag.includes('Spooky') || tag.includes('Mysterious')
-                          ? 'lavender'
-                          : tag.includes('Rainbow') || tag.includes('Magical')
-                          ? 'pink'
-                          : 'mint'
-                      }
-                    />
-                  ))}
-                </div>
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-xs">
+                    {entry.moodTags.map((tag) => (
+                      <WeatherChip
+                        key={tag}
+                        label={tag}
+                        color={
+                          tag.includes('Hot') || tag.includes('UV')
+                            ? 'orange'
+                            : tag.includes('Cold') || tag.includes('Blizzard')
+                            ? 'cyan'
+                            : tag.includes('Spooky') || tag.includes('Mysterious')
+                            ? 'lavender'
+                            : tag.includes('Rainbow') || tag.includes('Magical')
+                            ? 'pink'
+                            : 'mint'
+                        }
+                      />
+                    ))}
+                  </div>
 
-                {/* Actions */}
-                <div className="flex gap-sm mt-md pt-md border-t border-outline-variant/50">
-                  <button className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
-                    <Pin className={`w-4 h-4 ${entry.isPinned ? 'text-primary' : ''}`} />
-                    <span className="font-nunito text-label-sm">
-                      {entry.isPinned ? 'Pinned' : 'Pin'}
-                    </span>
-                  </button>
-                  <button className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
-                    <Heart
-                      className={`w-4 h-4 ${entry.isFavorite ? 'text-primary fill-primary' : ''}`}
-                    />
-                    <span className="font-nunito text-label-sm">
-                      {entry.isFavorite ? 'Loved' : 'Love'}
-                    </span>
-                  </button>
+                  {/* Actions */}
+                  <div className="flex gap-sm mt-md pt-md border-t border-outline-variant/50">
+                    <button className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+                      <Pin className={`w-4 h-4 ${entry.isPinned ? 'text-primary' : ''}`} />
+                      <span className="font-nunito text-label-sm">
+                        {entry.isPinned ? 'Pinned' : 'Pin'}
+                      </span>
+                    </button>
+                    <button className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+                      <Heart
+                        className={`w-4 h-4 ${entry.isFavorite ? 'text-primary fill-primary' : ''}`}
+                      />
+                      <span className="font-nunito text-label-sm">
+                        {entry.isFavorite ? 'Loved' : 'Love'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </GhostWindow>
-          </motion.div>
-        ))}
+              </GhostWindow>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {/* Starry Sites - Pinned Cities */}
@@ -228,7 +234,7 @@ export default function Almanac() {
             </motion.button>
           </div>
 
-          {/* Active Site Preview */}
+          {/* Active Site Preview Panel Frame */}
           <div className="bg-gradient-to-br from-baby-blue/30 to-lavender/30 rounded-xl p-md border border-outline-variant">
             <p className="font-nunito text-label-sm text-on-surface-variant mb-1">ACTIVE SITE</p>
             <h4 className="font-pixel text-headline-md text-secondary">

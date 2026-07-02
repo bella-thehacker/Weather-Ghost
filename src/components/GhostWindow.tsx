@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { X, Minus, Square } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface GhostWindowProps {
   title: string;
@@ -28,44 +29,58 @@ export default function GhostWindow({
 }: GhostWindowProps) {
   return (
     <motion.div
-      className={`ghost-window overflow-hidden ${className}`}
+      className={cn(
+        "bg-surface border-2 border-outline-variant shadow-[4px_4px_0px_0px_rgba(93,87,84,1)] rounded-xl overflow-hidden",
+        className
+      )}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      whileHover={{ boxShadow: '6px 6px 0px 0px rgba(93, 87, 84, 0.15)' }}
+      whileHover={{ boxShadow: '6px 6px 0px 0px rgba(93, 87, 84, 0.25)' }}
     >
-      {/* Title Bar */}
+      {/* OS Title Bar Window Header */}
       <div
-        className={`window-titlebar h-10 flex items-center justify-between px-md ${titleBarColors[titleBarColor]}`}
+        className={cn(
+          "h-10 flex items-center justify-between px-md border-b-2 border-outline-variant select-none",
+          titleBarColors[titleBarColor]
+        )}
       >
         <div className="flex items-center gap-sm">
-          {icon && <span className="text-on-surface">{icon}</span>}
+          {icon && (
+            <span className={titleBarColor === 'gray' ? 'text-on-surface-variant' : 'text-white'}>
+              {icon}
+            </span>
+          )}
           <span
-            className={`font-pixel text-label-sm ${
+            className={cn(
+              "font-pixel text-[11px] tracking-wide mt-0.5",
               titleBarColor === 'gray' ? 'text-on-surface-variant' : 'text-white'
-            }`}
+            )}
           >
             {title}
           </span>
         </div>
+        
+        {/* Retro Window Controller Action Links */}
         <div className="flex gap-xs">
           <button className="w-4 h-4 rounded-sm border border-white/40 bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
-            <Minus className="w-3 h-3 text-white" />
+            <Minus className="w-2.5 h-2.5 text-white" />
           </button>
           <button className="w-4 h-4 rounded-sm border border-white/40 bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
-            <Square className="w-2.5 h-2.5 text-white" />
+            <Square className="w-2 h-2 text-white" />
           </button>
           <button
+            type="button"
             onClick={onClose}
-            className="w-4 h-4 rounded-sm border border-white/40 bg-primary-container flex items-center justify-center hover:bg-bubblegum-pink transition-colors"
+            className="w-4 h-4 rounded-sm border border-outline-variant bg-primary-container flex items-center justify-center hover:bg-bubblegum-pink group transition-colors"
           >
-            <X className="w-3 h-3 text-on-primary-container" />
+            <X className="w-2.5 h-2.5 text-on-primary-container group-hover:text-white" />
           </button>
         </div>
       </div>
 
-      {/* Content */}
-      <div className={noPadding ? '' : 'p-md'}>{children}</div>
+      {/* Main Content Body Wrapper */}
+      <div className={noPadding ? 'p-0' : 'p-md'}>{children}</div>
     </motion.div>
   );
 }

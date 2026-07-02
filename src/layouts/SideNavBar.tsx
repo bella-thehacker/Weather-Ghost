@@ -5,7 +5,11 @@ import GhostCompanion from '../components/GhostCompanion';
 import PixelButton from '../components/PixelButton';
 import SparkleDecoration from '../components/SparkleDecoration';
 
-export default function SideNavBar() {
+interface SideNavBarProps {
+  onSummon?: () => void;
+}
+
+export default function SideNavBar({ onSummon }: SideNavBarProps) {
   const { activeTab, setActiveTab, ghosts } = useAppStore();
 
   const navItems = [
@@ -19,7 +23,7 @@ export default function SideNavBar() {
 
   return (
     <aside className="hidden md:flex flex-col gap-md p-md w-64 fixed left-0 top-16 bottom-0 border-r-2 border-outline-variant bg-surface-container-low z-40">
-      {/* Ghost Profile Card */}
+      {/* Ghost Profile Card Frame info section block */}
       <motion.div
         className="flex flex-col items-center p-lg bg-surface rounded-xl ghost-window mb-md relative overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
@@ -36,16 +40,16 @@ export default function SideNavBar() {
         />
       </motion.div>
 
-      {/* Navigation */}
+      {/* Navigation list */}
       <nav className="flex flex-col gap-sm flex-1">
         {navItems.map((item, index) => (
           <motion.button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`flex items-center gap-md p-3 rounded-lg transition-all text-left ${
+            className={`flex items-center gap-md p-3 rounded-lg transition-all text-left border-2 ${
               activeTab === item.id
-                ? 'bg-primary-container text-on-primary-container border-2 border-primary scale-[0.98]'
-                : 'text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container hover:translate-x-1'
+                ? 'bg-primary-container text-on-primary-container border-primary scale-[0.98]'
+                : 'bg-transparent border-transparent text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container hover:translate-x-1'
             }`}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -57,7 +61,7 @@ export default function SideNavBar() {
         ))}
       </nav>
 
-      {/* Collection Progress */}
+      {/* Sticker Book Collection Progress Bar Container */}
       <motion.div
         className="bg-surface rounded-xl p-md ghost-window"
         initial={{ opacity: 0 }}
@@ -82,14 +86,20 @@ export default function SideNavBar() {
         </div>
       </motion.div>
 
-      {/* Summon Button */}
+      {/* Summon Interaction Button Link */}
       <motion.div
         className="mt-auto pt-md relative"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <PixelButton variant="primary" size="md" fullWidth icon={<Sparkles className="w-4 h-4" />}>
+        <PixelButton 
+          variant="primary" 
+          size="md" 
+          fullWidth 
+          icon={<Sparkles className="w-4 h-4" />}
+          onClick={onSummon} // Launch accelerator sequence on user selection clicks!
+        >
           Summon Sparkles
         </PixelButton>
       </motion.div>

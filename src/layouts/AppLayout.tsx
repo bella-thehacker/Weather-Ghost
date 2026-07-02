@@ -1,41 +1,61 @@
 import { type ReactNode } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import TopNavBar from './TopNavBar';
 import SideNavBar from './SideNavBar';
+import SparkleDecoration from '../components/SparkleDecoration';
 import FloatingDecorations from '../components/FloatingDecorations';
+import { useSparkles } from '../hooks/useSparkles';
 
 interface AppLayoutProps {
   children: ReactNode;
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
+  const { sparkles, summonSparkles } = useSparkles();
+  const colors = ['#ffd9e5', '#FFF4CC', '#D4F8E8', '#E8DDFF'];
+
   return (
-    <div className="min-h-screen bg-surface relative">
+    <div className="min-h-screen bg-surface font-nunito text-on-surface relative select-none">
+      {/* Interactive 90s OS Window background cloud drift patterns */}
       <FloatingDecorations />
+
+      {/* Global Sparkle Acceleration View Overlay Layer Element */}
+      <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
+        <AnimatePresence>
+          {sparkles.map((sparkle, index) => (
+            <motion.div
+              key={sparkle.id}
+              className="absolute"
+              style={{ left: `${sparkle.x}%`, top: `${sparkle.y}%` }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ 
+                scale: [0, 1.4, 1, 0], 
+                opacity: [0, 1, 1, 0],
+                rotate: [0, 45, -45, 0] 
+              }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.1, ease: 'easeOut' }}
+            >
+              <SparkleDecoration
+                size={sparkle.size}
+                color={colors[index % colors.length]}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* Primary OS Frame Bars */}
       <TopNavBar />
-      <SideNavBar />
-
-      {/* Main Content */}
-      <main className="md:ml-64 pt-16 min-h-screen relative z-10">
-        <div className="p-window-margin pb-24 md:pb-window-margin">{children}</div>
-      </main>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-4 left-4 right-4 h-16 bg-surface-container border-2 border-outline-variant rounded-xl flex items-center justify-around shadow-ghost z-50">
-        {[
-          { id: 'dashboard', icon: 'home', label: 'HOME' },
-          { id: 'forecast', icon: 'cloud', label: 'FORECAST' },
-          { id: 'collection', icon: 'auto_awesome', label: 'GALLERY' },
-          { id: 'chat', icon: 'chat_bubble', label: 'CHAT' },
-        ].map((item) => (
-          <button
-            key={item.id}
-            className="flex flex-col items-center gap-0.5 text-on-surface-variant"
-          >
-            <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-            <span className="text-[9px] font-nunito font-bold">{item.label}</span>
-          </button>
-        ))}
-      </nav>
+      
+      <div className="flex pt-16 h-[calc(100vh-64px)]">
+        {/* Pass the function straight to the sidebar instance handler trigger */}
+        <SideNavBar onSummon={summonSparkles} />
+        
+        <main className="flex-1 overflow-y-auto p-md lg:p-lg md:ml-64 custom-scrollbar relative z-10">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

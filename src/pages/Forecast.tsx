@@ -4,7 +4,7 @@ import { CalendarDays, MapPin } from 'lucide-react';
 import GhostWindow from '../components/GhostWindow';
 import WeatherChip from '../components/WeatherChip';
 import { useAppStore } from '../store/useAppStore';
-import { fetchForecast } from '../services/weatherService';
+import { fetchForecast, getWeatherIconAsset } from '../services/weatherService';
 import type { ForecastDay } from '../types';
 
 const tagColors: Record<string, 'yellow' | 'blue' | 'mint' | 'pink' | 'lavender' | 'peach' | 'orange' | 'cyan' | 'slate'> = {
@@ -122,23 +122,28 @@ export default function Forecast() {
 
               {/* Day Content */}
               <div className="p-md flex flex-col items-center gap-md">
-                {/* Ghost Image */}
-                <motion.div
-                  className="w-32 h-32 relative"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{
-                    duration: 2.5 + index * 0.3,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                >
+                {/* Ghost Image Companion container */}
+                <div className="w-32 h-32 relative flex items-center justify-center">
+                  {/* Dynamic Weather Icon beneath the ghost companion */}
                   <img
-                    src={day.ghostImage}
-                    alt={day.ghostMood}
-                    className="w-full h-full object-contain"
+                    src={getWeatherIconAsset(day.condition)}
+                    alt=""
+                    className="w-24 h-24 absolute opacity-40 select-none bottom-0 left-2"
                     style={{ imageRendering: 'pixelated' }}
                   />
-                </motion.div>
+                  <motion.img
+                    src={day.ghostImage}
+                    alt={day.ghostMood}
+                    className="w-28 h-28 object-contain z-10 relative select-none"
+                    style={{ imageRendering: 'pixelated' }}
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{
+                      duration: 2.5 + index * 0.3,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                </div>
 
                 {/* Temperature */}
                 <div className="text-center">
@@ -172,7 +177,7 @@ export default function Forecast() {
                   </div>
                 </div>
 
-                {/* Ghost Quote */}
+                {/* Ghost Quote Box */}
                 <div className="pixel-border-dashed p-md rounded-lg bg-surface w-full">
                   <p className="font-nunito text-primary mb-1 uppercase text-[10px] opacity-70">
                     Mood: {day.ghostMood}
@@ -187,12 +192,12 @@ export default function Forecast() {
         </div>
       </div>
 
-      {/* Secondary Stats */}
+      {/* Secondary Dynamic Sensors Layout Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
         <GhostWindow title="humidity_sensor.exe">
           <div className="p-md">
             <div className="flex items-center gap-sm text-primary mb-2">
-              <img src="/icons/rain-drops.png" alt="" className="w-5 h-5" style={{ imageRendering: 'pixelated' }} />
+              <img src="/icons/rain-drops.png" alt="" className="w-5 h-5 select-none" style={{ imageRendering: 'pixelated' }} />
               <span className="font-nunito text-label-lg">Humidity Sensor</span>
             </div>
             <div className="flex items-end justify-between">
@@ -218,7 +223,7 @@ export default function Forecast() {
         <GhostWindow title="wind_sensor.exe">
           <div className="p-md">
             <div className="flex items-center gap-sm text-primary mb-2">
-              <img src="/icons/wind.png" alt="" className="w-5 h-5" style={{ imageRendering: 'pixelated' }} />
+              <img src="/icons/wind.png" alt="" className="w-5 h-5 select-none" style={{ imageRendering: 'pixelated' }} />
               <span className="font-nunito text-label-lg">Ethereal Wind</span>
             </div>
             <div className="flex items-end justify-between">
@@ -231,7 +236,7 @@ export default function Forecast() {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
               >
-                <img src="/icons/wind.png" alt="" className="w-10 h-10 opacity-50" style={{ imageRendering: 'pixelated' }} />
+                <img src="/icons/wind.png" alt="" className="w-10 h-10 opacity-30 select-none" style={{ imageRendering: 'pixelated' }} />
               </motion.div>
             </div>
           </div>
@@ -240,7 +245,7 @@ export default function Forecast() {
         <GhostWindow title="temperature.exe">
           <div className="p-md">
             <div className="flex items-center gap-sm text-primary mb-2">
-              <img src="/icons/temperature.png" alt="" className="w-5 h-5" style={{ imageRendering: 'pixelated' }} />
+              <img src="/icons/temperature.png" alt="" className="w-5 h-5 select-none" style={{ imageRendering: 'pixelated' }} />
               <span className="font-nunito text-label-lg">Temperature Range</span>
             </div>
             <div className="flex items-end justify-between">
@@ -261,7 +266,7 @@ export default function Forecast() {
               <img
                 src="/icons/pink-temperature.png"
                 alt=""
-                className="w-12 h-12"
+                className="w-12 h-12 select-none"
                 style={{ imageRendering: 'pixelated' }}
               />
             </div>
